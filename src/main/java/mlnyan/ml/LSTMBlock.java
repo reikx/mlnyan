@@ -36,7 +36,13 @@ public class LSTMBlock{
         inSize = tanh.getInputSize();
     }
 
+    public void setLastMem(double lastMem) {
+        this.lastMem = lastMem;
+    }
 
+    public double getMemory() {
+        return memory;
+    }
 
     public void setInput(double input) {
         this.input = input;

@@ -68,4 +68,13 @@ public class LSTMModel extends ModelBase {
     public int getOutputSize() {
         return layers[layers.length - 1].perceptron.rows();
     }
+
+    public LSTMModel next(){
+        LSTMModel model = new LSTMModel(lstmLayers[0].blocks[0],layers);
+        for (int i = 0;i < lstmLayers.length;++i){
+            model.lstmLayers[i] = lstmLayers[i].next();
+        }
+        return model;
+    }
+
 }

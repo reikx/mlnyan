@@ -6,10 +6,8 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 public class Momentum implements IBackPropagation{
     Layer momentumLayer;
     private final double move;
-    private final double learning;
 
-    public Momentum(double learning,double move){
-        this.learning = learning;
+    public Momentum(double move){
         this.move = move;
     }
 
@@ -38,7 +36,7 @@ public class Momentum implements IBackPropagation{
 
     @Override
     public Momentum initial() {
-        Momentum momentum = new Momentum(learning,move);
+        Momentum momentum = new Momentum(move);
         momentum.momentumLayer = momentumLayer.initial();
         return momentum;
     }
@@ -49,7 +47,7 @@ public class Momentum implements IBackPropagation{
         layer.perceptron = momentumLayer.perceptron.dup();
         layer.bias = momentumLayer.bias.dup();
         layer.weight = momentumLayer.weight.dup();
-        Momentum momentum = new Momentum(learning,move);
+        Momentum momentum = new Momentum(move);
         momentum.momentumLayer = layer;
         return momentum;
     }

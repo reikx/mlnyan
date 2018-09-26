@@ -31,6 +31,14 @@ public class LSTMLayer extends LayerBase {
         return ret;
     }
 
+    public LSTMLayer next(){
+        LSTMLayer lstmLayer = new LSTMLayer(size,blocks[0]);
+        for (int i = 0;i < size;++i){
+            lstmLayer.blocks[i].setLastMem(blocks[i].getMemory());
+        }
+        return lstmLayer;
+    }
+
     @Override
     public void setInput(INDArray input) {
         for (int i = 0;i < input.rows();++i){
