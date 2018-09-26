@@ -7,8 +7,12 @@ public class LSTMModel extends ModelBase {
 
     Layer[] layers;
     LSTMLayer[] lstmLayers;
-    public LSTMModel(LSTMBlock lstmBlock,Layer... layers){
+    LSTMBlock block;
+    private final double learning;
+    public LSTMModel(LSTMBlock lstmBlock,double learning,Layer... layers){
+        this.block = lstmBlock;
         this.layers = layers;
+        this.learning = learning;
         this.lstmLayers = new LSTMLayer[this.layers.length - 1];
         for (int i = 0;i < lstmLayers.length;++i){
             lstmLayers[i] = new LSTMLayer(this.layers[i].getOutputSize(),lstmBlock);
@@ -22,13 +26,30 @@ public class LSTMModel extends ModelBase {
 
 
     @Override
+    protected LSTMModel clone(){
+        Layer[] ls = new Layer[layers.length];
+        for (int j = 0;j < layers.length;++j){
+            ls[j] = layers[j].clone();
+        }
+        LSTMLayer[] lls = new LSTMLayer[lstmLayers.length];
+        for (int j = 0;j < lstmLayers.length;++j){
+            lls[j] = lstmLayers[j].clone();
+        }
+        LSTMModel model = new LSTMModel(block,learning,ls);
+        model.input = input;
+        model.output = output;
+        model.lstmLayers = lls;
+        return model;
+    }
+
+    @Override
     public String convertToJson() {
         return null;
     }
 
     @Override
     public INDArray doBackPropagation(INDArray target) {
-        return doBackPropagationByDiff(target.sub(layers[layers.length - 1].perceptron));
+        return doBackPropagationByDiff(target.sub(output).mul(learning));
     }
 
     @Override
@@ -45,13 +66,14 @@ public class LSTMModel extends ModelBase {
     public INDArray calc() {
         INDArray k = input;
         for (int i = 0;i < lstmLayers.length;++i){
-            lstmLayers[i].setInput(k);
-            k = lstmLayers[i].calc();
             layers[i].setInput(k);
             k = layers[i].calc();
+            lstmLayers[i].setInput(k);
+            k = lstmLayers[i].calc();
         }
         layers[layers.length - 1].setInput(k);
-        return layers[layers.length - 1].calc();
+        output = layers[layers.length - 1].calc();
+        return output;
     }
 
     @Override
@@ -70,11 +92,12 @@ public class LSTMModel extends ModelBase {
     }
 
     public LSTMModel next(){
-        LSTMModel model = new LSTMModel(lstmLayers[0].blocks[0],layers);
+        LSTMModel model = new LSTMModel(lstmLayers[0].blocks[0],learning,layers);
         for (int i = 0;i < lstmLayers.length;++i){
             model.lstmLayers[i] = lstmLayers[i].next();
         }
         return model;
     }
+
 
 }

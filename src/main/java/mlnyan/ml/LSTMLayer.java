@@ -56,8 +56,12 @@ public class LSTMLayer extends LayerBase {
     }
 
     @Override
-    protected LayerBase clone() {
-        return null;
+    protected LSTMLayer clone() {
+        LSTMLayer layer = new LSTMLayer(size,blocks[0]);
+        for (int i = 0;i < blocks.length;++i){
+            layer.blocks[i] = blocks[i].clone();
+        }
+        return layer;
     }
 
     @Override

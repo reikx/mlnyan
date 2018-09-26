@@ -13,8 +13,8 @@ public class Layer extends LayerBase{
     INDArray weight;
     public Layer(int p1,int p2,Activator activator,IBackPropagation backPropagation){
         this.perceptron = Nd4j.zeros(p1,1);
-        this.bias = Nd4j.zeros(p1,1);
-        this.weight = Nd4j.zeros(p2,p1);
+        this.bias = Nd4j.zeros(p2,1);
+        this.weight = Nd4j.rand(p2,p1).div(Math.sqrt((double)p1 / 2));
         this.activator = activator;
         this.backPropagation = backPropagation;
     }
@@ -64,6 +64,7 @@ public class Layer extends LayerBase{
     @Override
     public void setInput(INDArray input) {
         if(input == null || this.perceptron.rows() != input.rows()){
+            System.out.println(this.perceptron.rows() + "/" +input.rows() );
             Logger.error("Illegal input");
             return;
         }

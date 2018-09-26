@@ -24,7 +24,10 @@ public class PerceptronModel extends ModelBase{
         for (int i = 0;i < layers.length;++i){
             layers[i] = this.layers[i].clone();
         }
-        return new PerceptronModel(layers);
+        PerceptronModel model = new PerceptronModel(layers);
+        model.input = input;
+        model.output = output;
+        return model;
     }
 
 
@@ -40,7 +43,7 @@ public class PerceptronModel extends ModelBase{
     }
 
     @Override
-    public ModelBase initial() {
+    public PerceptronModel initial() {
         Layer[] layers = new Layer[this.layers.length];
         for (int i = 0;i < layers.length;++i){
             layers[i] = this.layers[i].initial();

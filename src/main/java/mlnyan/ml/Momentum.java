@@ -43,12 +43,14 @@ public class Momentum implements IBackPropagation{
 
     @Override
     public Momentum clone(){
-        Layer layer = momentumLayer.initial();
-        layer.perceptron = momentumLayer.perceptron.dup();
-        layer.bias = momentumLayer.bias.dup();
-        layer.weight = momentumLayer.weight.dup();
         Momentum momentum = new Momentum(move);
-        momentum.momentumLayer = layer;
+        if(momentumLayer != null) {
+            Layer layer = momentumLayer.clone();
+            layer.perceptron = momentumLayer.perceptron.dup();
+            layer.bias = momentumLayer.bias.dup();
+            layer.weight = momentumLayer.weight.dup();
+            momentum.momentumLayer = layer;
+        }
         return momentum;
     }
 }

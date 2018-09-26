@@ -14,10 +14,10 @@ public class LSTMBlock{
     private int inSize;
     private int outSize;
 
-    private PerceptronModel sigmoid1;
-    private PerceptronModel sigmoid2;
-    private PerceptronModel tanh;
-    private PerceptronModel sigmoid3;
+    PerceptronModel sigmoid1;
+    PerceptronModel sigmoid2;
+    PerceptronModel tanh;
+    PerceptronModel sigmoid3;
 
     private double pro1;
     private double pro2;
@@ -86,9 +86,23 @@ public class LSTMBlock{
         return new LSTMBlock(sigmoid1,sigmoid2,sigmoid3,tanh,learning);
     }
 
+    public LSTMBlock clone(){
+        LSTMBlock block = new LSTMBlock(sigmoid1,sigmoid2,sigmoid3,tanh,learning);
+        block.memory = memory;
+        block.lastMem = lastMem;
+        block.pro1 = pro1;
+        block.pro2 = pro2;
+        block.pro3 = pro3;
+        block.pro4 = pro4;
+        block.output = output;
+        block.input = input;
+        return block;
+    }
 
     public double doBackPropagationByDiff(double diff) {
-
+        if(diff == 0){
+            System.out.println("hee");
+        }
         double s3d = sigmoid3.doBackPropagationByDiff(Nd4j.create(new double[]{this.pro4})).getDouble(0,0);
         double diff1 = (1 / Math.cosh(memory)) * diff * (this.pro2 / this.pro3);
         double diff2 = (1 / Math.cosh(memory)) * diff * (this.pro1 / this.pro3);
@@ -98,6 +112,5 @@ public class LSTMBlock{
 
         return s3d + s1d + s2d + td;
     }
-
 
 }
