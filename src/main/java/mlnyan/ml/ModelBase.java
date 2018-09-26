@@ -25,6 +25,8 @@ public abstract class ModelBase {
 
     public abstract INDArray calc();
 
+    public abstract ModelBase initial();
+
     public abstract int getInputSize();
 
     public abstract int getOutputSize();

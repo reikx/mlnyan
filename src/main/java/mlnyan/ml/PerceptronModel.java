@@ -40,6 +40,15 @@ public class PerceptronModel extends ModelBase{
     }
 
     @Override
+    public ModelBase initial() {
+        Layer[] layers = new Layer[this.layers.length];
+        for (int i = 0;i < layers.length;++i){
+            layers[i] = this.layers[i].initial();
+        }
+        return new PerceptronModel(layers);
+    }
+
+    @Override
     public int getInputSize() {
         return layers[0].getInputSize();
     }
