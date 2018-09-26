@@ -6,4 +6,6 @@ public interface IBackPropagation{
     INDArray calc(Layer layer, INDArray diff);
 
     IBackPropagation initial();
+
+    IBackPropagation clone();
 }

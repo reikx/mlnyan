@@ -1,9 +1,9 @@
-package mlnyan.ml.lstm;
+package mlnyan.ml;
 
-import mlnyan.ml.IModel;
+import mlnyan.ml.ModelBase;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
-public class LSTM implements IModel {
+public class LSTM implements ModelBase {
     @Override
     public void init() {
 

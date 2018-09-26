@@ -7,20 +7,20 @@ import org.nd4j.linalg.ops.transforms.Transforms;
 
 import java.util.ArrayList;
 
-public class LSTMOld implements IModel{
+public class LSTMOld implements ModelBase {
 
     private INDArray lastOutput;
     private INDArray input;
-    public Model sigmoid1;
-    private Model sigmoid2;
-    private Model tanh;
-    private Model sigmoid3;
+    public PerceptronModel sigmoid1;
+    private PerceptronModel sigmoid2;
+    private PerceptronModel tanh;
+    private PerceptronModel sigmoid3;
     private double learning;
 
-    ArrayList<LSTMModel> models = new ArrayList<>();
+    ArrayList<LSTMPerceptronModel> models = new ArrayList<>();
 
 
-    public LSTMOld(Model firstSig, Model secondSig, Model thirdSig, Model tanh, double learning) {
+    public LSTMOld(PerceptronModel firstSig, PerceptronModel secondSig, PerceptronModel thirdSig, PerceptronModel tanh, double learning) {
         this.sigmoid1 = firstSig.clone();
         this.sigmoid2 = secondSig.clone();
         this.sigmoid3 = thirdSig.clone();
@@ -59,7 +59,7 @@ public class LSTMOld implements IModel{
             models.get(i).doBackPropagation(target.getColumn(i));
         }
         for(int i = 0;i < models.size();++i){
-            LSTMModel model = models.get(i);
+            LSTMPerceptronModel model = models.get(i);
             for (int j = 0;j < sigmoid1.layers.length - 1;++j){
                 sigmoid1.layers[j].weight = sigmoid1.layers[j].weight.sub(model.sigmoid1Dif.layers[j].weight);
                 sigmoid1.layers[j].bias = sigmoid1.layers[j].bias.sub(model.sigmoid1Dif.layers[j].bias);
@@ -86,12 +86,12 @@ public class LSTMOld implements IModel{
 
     @Override
     public INDArray calc() {
-        LSTMModel model;
+        LSTMPerceptronModel model;
         if(models.size() == 0){
-            model = new LSTMModel(sigmoid1,sigmoid2,sigmoid3,tanh,Nd4j.zeros(sigmoid1.layers[sigmoid1.layers.length - 1].perceptron.rows(),1),learning);
+            model = new LSTMPerceptronModel(sigmoid1,sigmoid2,sigmoid3,tanh,Nd4j.zeros(sigmoid1.layers[sigmoid1.layers.length - 1].perceptron.rows(),1),learning);
         }
         else{
-            model = new LSTMModel(sigmoid1,sigmoid2,sigmoid3,tanh,models.get(models.size() - 1).memory,learning);
+            model = new LSTMPerceptronModel(sigmoid1,sigmoid2,sigmoid3,tanh,models.get(models.size() - 1).memory,learning);
         }
         models.add(model);
         model.setInput(input);
@@ -106,7 +106,7 @@ public class LSTMOld implements IModel{
     }
 
 
-    private static class LSTMModel extends Model{
+    private static class LSTMPerceptronModel extends PerceptronModel {
 
         private INDArray output;
         private INDArray memory;
@@ -114,15 +114,15 @@ public class LSTMOld implements IModel{
         private INDArray input;
         private int inSize;
         private int outSize;
-        private Model sigmoid1;
-        private Model sigmoid2;
-        private Model tanh;
-        private Model sigmoid3;
+        private PerceptronModel sigmoid1;
+        private PerceptronModel sigmoid2;
+        private PerceptronModel tanh;
+        private PerceptronModel sigmoid3;
 
-        private Model sigmoid1Dif;
-        private Model sigmoid2Dif;
-        private Model tanhDif;
-        private Model sigmoid3Dif;
+        private PerceptronModel sigmoid1Dif;
+        private PerceptronModel sigmoid2Dif;
+        private PerceptronModel tanhDif;
+        private PerceptronModel sigmoid3Dif;
 
         private INDArray pro1;
         private INDArray pro2;
@@ -131,7 +131,7 @@ public class LSTMOld implements IModel{
         private INDArray pro5;
         private double learning;
 
-        public LSTMModel(Model firstSig,Model secondSig,Model thirdSig,Model tanh,INDArray lastMem,double learning) {
+        public LSTMPerceptronModel(PerceptronModel firstSig, PerceptronModel secondSig, PerceptronModel thirdSig, PerceptronModel tanh, INDArray lastMem, double learning) {
             super(null);
             this.sigmoid1 = firstSig;
             this.sigmoid2 = secondSig;
@@ -233,5 +233,6 @@ public class LSTMOld implements IModel{
 
 
     }
+
 
 }

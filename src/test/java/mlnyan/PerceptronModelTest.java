@@ -2,19 +2,19 @@ package mlnyan;
 
 import mlnyan.ml.Activator;
 import mlnyan.ml.Layer;
-import mlnyan.ml.Model;
+import mlnyan.ml.PerceptronModel;
 import mlnyan.ml.Momentum;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
-public class ModelTest {
+public class PerceptronModelTest {
 
-    Model model;
+    PerceptronModel perceptronModel;
 
     @org.junit.Before
     public void setUp() throws Exception {
-        model = new Model(new Momentum(0.01,0.7),new Layer(3,Activator.RELU),new Layer(8,Activator.SOFTMAX),new Layer(4,Activator.NONE));
-        model.init();
+        perceptronModel = new PerceptronModel(new Momentum(0.01,0.7),new Layer(3,Activator.RELU),new Layer(8,Activator.SOFTMAX),new Layer(4,Activator.NONE));
+        perceptronModel.init();
     }
 
     @org.junit.After
@@ -24,8 +24,8 @@ public class ModelTest {
     @org.junit.Test
     public void calc(){
         for (int i = 0;i < 1000;++i){
-            model.setInput(Nd4j.create(new double[]{0.3323,0.4,0.7}).transpose());
-            INDArray result =  model.calc();
+            perceptronModel.setInput(Nd4j.create(new double[]{0.3323,0.4,0.7}).transpose());
+            INDArray result =  perceptronModel.calc();
             StringBuilder sb = new StringBuilder();
             for (double d:result.toDoubleVector()){
                 sb.append(d);
@@ -37,7 +37,7 @@ public class ModelTest {
             a.put(2,0,0.0);
             a.put(3,0,0.0);
             System.out.println(sb.toString());
-            model.doBackPropagation(a);
+            perceptronModel.doBackPropagation(a);
         }
     }
 
@@ -52,6 +52,6 @@ public class ModelTest {
 
     @org.junit.Test
     public void convertToJson() {
-        System.out.println(model.convertToJson());
+        System.out.println(perceptronModel.convertToJson());
     }
 }
